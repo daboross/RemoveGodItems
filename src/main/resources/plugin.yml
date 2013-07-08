@@ -1,0 +1,5 @@
+name: GodItemFixer
+main: net.daboross.bukkitdev.goditemfixer.GodItemFixer
+version: 1.0
+author: Dabo Ross
+description: Fixes God Items
