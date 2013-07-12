@@ -1,4 +1,4 @@
-PluginRequest-GodItemFixer
+GodItemFixer - Bukkit plugin request
 ================
 
 GodItemFixer bukkit plugin.
