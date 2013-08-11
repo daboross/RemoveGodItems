@@ -1,5 +1,5 @@
-name: GodItemFixer
+name: ${project.name}
 main: net.daboross.bukkitdev.goditemfixer.GodItemFixer
-version: 1.0
+version: ${project.version}
 author: Dabo Ross
 description: Fixes God Items
