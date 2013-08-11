@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.daboross.bukkitdev.goditemfixer</groupId>
-    <artifactId>GodItemFixer</artifactId>
+    <artifactId>remove-god-items</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
-    <name>GodItemFixer</name>
+    <version>1.0.0</version>
+    <name>RemoveGodItems</name>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
@@ -12,7 +12,16 @@
         </repository>
     </repositories>
     <build>
-        <finalName>GodItemFixer</finalName>
+        <finalName>${project.name}</finalName>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
