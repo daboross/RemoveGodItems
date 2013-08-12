@@ -21,10 +21,12 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,36 +44,42 @@ public class GodItemFixerListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent evt) {
         removeGodEnchants(evt.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onWorldChange(PlayerChangedWorldEvent evt) {
         Bukkit.getScheduler().runTaskLater(plugin, new GodItemFixRunnable(evt.getPlayer()), 20);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onInventoryGet(InventoryCreativeEvent evt) {
+        removeGodEnchants(evt.getCursor(), evt.getWhoClicked().getName());
+    }
+
     public static void removeGodEnchants(Player p) {
+        String name = p.getName();
         for (ItemStack it : p.getInventory().getArmorContents()) {
-            removeGodEnchants(it, p);
+            removeGodEnchants(it, name);
         }
         for (ItemStack it : p.getInventory().getContents()) {
-            removeGodEnchants(it, p);
+            removeGodEnchants(it, name);
         }
     }
 
-    public static void removeGodEnchants(ItemStack it, Player p) {
+    public static void removeGodEnchants(ItemStack it, String name) {
         if (it != null && it.getEnchantments().size() > 0 && it.getType() != Material.AIR) {
             for (Map.Entry<Enchantment, Integer> entry : it.getEnchantments().entrySet()) {
                 Enchantment e = entry.getKey();
                 if (entry.getValue() > e.getMaxLevel() || !e.canEnchantItem(it)) {
                     String message;
                     if (e.canEnchantItem(it)) {
-                        message = String.format("Changed level of enchantment %s from %s to %s on item %s in inventory of %s", e.getName(), entry.getValue(), e.getMaxLevel(), it.getType().toString(), p.getName());
+                        message = String.format("Changed level of enchantment %s from %s to %s on item %s in inventory of %s", e.getName(), entry.getValue(), e.getMaxLevel(), it.getType().toString(), name);
                         it.addEnchantment(e, e.getMaxLevel());
                     } else {
-                        message = String.format("Removed enchantment %s level %s on item %s in inventory of %s", e.getName(), entry.getValue(), it.getType().toString(), p.getName());
+                        message = String.format("Removed enchantment %s level %s on item %s in inventory of %s", e.getName(), entry.getValue(), it.getType().toString(), name);
                         it.removeEnchantment(e);
                     }
                     Bukkit.getLogger().log(Level.INFO, "[GodItemFix] {0}", message);
