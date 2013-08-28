@@ -14,24 +14,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.daboross.bukkitdev.goditemfixer;
+package net.daboross.bukkitdev.removegoditems;
 
+import java.io.IOException;
+import java.util.logging.Level;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.MetricsLite;
 
 /**
  *
  * @author daboross
  */
-public class GodItemFixer extends JavaPlugin {
+public class RemoveGodItemsPlugin extends JavaPlugin {
+
+    private GodItemChecker checker;
 
     @Override
     public void onEnable() {
+        checker = new GodItemChecker(this);
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new GodItemFixerListener(this), this);
+        pm.registerEvents(new RemoveGodItemsListener(this), this);
+        MetricsLite metrics = null;
+        try {
+            metrics = new MetricsLite(this);
+        } catch (IOException ex) {
+            getLogger().log(Level.WARNING, "Unable to create Metrics: {0}", ex.toString());
+        }
+        if (metrics != null) {
+            metrics.start();
+        }
     }
 
     @Override
     public void onDisable() {
+    }
+
+    public GodItemChecker getChecker() {
+        return checker;
     }
 }
