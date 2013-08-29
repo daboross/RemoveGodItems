@@ -100,17 +100,42 @@ public class GodItemChecker {
         Bukkit.getScheduler().runTaskLater(plugin, new GodItemFixRunnable(p), 20);
     }
 
+    public void removeGodEnchantsNextTick(HumanEntity p, Iterable<Integer> slots) {
+        Bukkit.getScheduler().runTask(plugin, new VarriedCheckRunnable(p, slots));
+    }
+
     public class GodItemFixRunnable implements Runnable {
 
-        private final Player p;
+        private final HumanEntity p;
 
-        public GodItemFixRunnable(Player p) {
+        public GodItemFixRunnable(HumanEntity p) {
             this.p = p;
         }
 
         @Override
         public void run() {
             removeGodEnchants(p);
+        }
+    }
+
+    public class VarriedCheckRunnable implements Runnable {
+
+        private final HumanEntity p;
+        private final Iterable<Integer> items;
+
+        public VarriedCheckRunnable(HumanEntity p, Iterable<Integer> items) {
+            this.p = p;
+            this.items = items;
+        }
+
+        @Override
+        public void run() {
+            Inventory inv = p.getInventory();
+            Location loc = p.getLocation();
+            String name = p.getName();
+            for (Integer i : items) {
+                removeGodEnchants(inv.getItem(i), inv, loc, name);
+            }
         }
     }
 }

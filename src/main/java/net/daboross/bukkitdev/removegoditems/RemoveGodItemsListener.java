@@ -21,9 +21,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 /**
  *
@@ -37,19 +38,28 @@ public class RemoveGodItemsListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent evt) {
         plugin.getChecker().removeGodEnchants(evt.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onWorldChange(PlayerChangedWorldEvent evt) {
         plugin.getChecker().runFullCheckNextSecond(evt.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryGet(InventoryCreativeEvent evt) {
         plugin.getChecker().removeGodEnchants(evt.getCursor(), evt.getWhoClicked());
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPickup(PlayerPickupItemEvent evt) {
+        plugin.getChecker().removeGodEnchants(evt.getItem().getItemStack(), evt.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onInventoryMove(InventoryDragEvent evt) {
+        plugin.getChecker().removeGodEnchantsNextTick(evt.getWhoClicked(), evt.getInventorySlots());
+    }
 }
