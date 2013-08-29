@@ -22,7 +22,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -57,7 +56,7 @@ public class GodItemChecker {
     }
 
     public void removeGodEnchants(ItemStack itemStack, Inventory inventory, Location location, String name) {
-        if (itemStack != null && itemStack.getEnchantments().size() > 0 && itemStack.getType() != Material.AIR) {
+        if (itemStack != null && itemStack.getType() != Material.AIR) {
             for (Map.Entry<Enchantment, Integer> entry : itemStack.getEnchantments().entrySet()) {
                 Enchantment e = entry.getKey();
                 if (entry.getValue() > e.getMaxLevel() || !e.canEnchantItem(itemStack)) {
