@@ -60,15 +60,8 @@ public class GodItemChecker {
             for (Map.Entry<Enchantment, Integer> entry : itemStack.getEnchantments().entrySet()) {
                 Enchantment e = entry.getKey();
                 if (entry.getValue() > e.getMaxLevel() || !e.canEnchantItem(itemStack)) {
-                    String message;
-                    if (e.canEnchantItem(itemStack)) {
-                        message = String.format("Changed level of enchantment %s from %s to %s on item %s in inventory of %s", e.getName(), entry.getValue(), e.getMaxLevel(), itemStack.getType().toString(), name);
-                        itemStack.addEnchantment(e, e.getMaxLevel());
-                    } else {
-                        message = String.format("Removed enchantment %s level %s on item %s in inventory of %s", e.getName(), entry.getValue(), itemStack.getType().toString(), name);
-                        itemStack.removeEnchantment(e);
-                    }
-                    plugin.getLogger().log(Level.INFO, message);
+                    itemStack.setType(Material.AIR);
+                    plugin.getLogger().log(Level.INFO, String.format("Removed item %s with %s level %s from %s", itemStack.getType(), e.getName(), entry.getValue(), name));
                 }
             }
             checkOverstack(itemStack, inventory, location, name);
@@ -79,20 +72,8 @@ public class GodItemChecker {
         int maxAmount = itemStack.getType().getMaxStackSize();
         int amount = itemStack.getAmount();
         if (amount > maxAmount) {
-            int numStacks = amount / maxAmount;
-            int left = amount % maxAmount;
-            plugin.getLogger().log(Level.INFO, "Unstacked item {0} of size {1} to size {2} with {3} extra stacks in inventory of {4} size", new Object[]{itemStack.getType().name(), amount, left, numStacks, name});
-            itemStack.setAmount(left);
-            for (int i = 0; i < numStacks; i++) {
-                ItemStack newStack = itemStack.clone();
-                newStack.setAmount(maxAmount);
-                int slot = inventory.firstEmpty();
-                if (slot < 0) {
-                    location.getWorld().dropItemNaturally(location, newStack);
-                } else {
-                    inventory.setItem(slot, newStack);
-                }
-            }
+            plugin.getLogger().log(Level.INFO, "Removed overstacked item {0} of size {1} from {2}", new Object[]{itemStack.getType().name(), amount, name});
+            itemStack.setType(Material.AIR);
         }
     }
 
