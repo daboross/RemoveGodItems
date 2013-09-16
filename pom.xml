@@ -35,6 +35,7 @@
         <netbeans.hint.license>gpl3</netbeans.hint.license>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -55,8 +56,8 @@
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
         <repository>
-            <id>mcstats-repo</id>
-            <url>http://repo.mcstats.org/content/repositories/public</url>
+            <id>repo-daboross-net</id>
+            <url>http://repo.daboross.net/</url>
         </repository>
     </repositories>
 
@@ -75,7 +76,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+                <version>3.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -109,8 +110,17 @@
             </plugin>
         </plugins>
     </build>
+
     <issueManagement>
         <url>https://github.com/daboross/RemoveGodItems.git</url>
         <system>Github Issues</system>
     </issueManagement>
+    <distributionManagement>
+        <repository>
+            <id>repo-daboross-net</id>
+            <name>repo.daboross.net</name>
+            <uniqueVersion>false</uniqueVersion>
+            <url>scp://repo.daboross.net/repo/</url>
+        </repository>
+    </distributionManagement>
 </project>
