@@ -35,30 +35,31 @@
         <netbeans.hint.license>gpl3</netbeans.hint.license>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.6.2-R0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mcstats.bukkit</groupId>
-            <artifactId>metrics-lite</artifactId>
-            <version>R7</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+
     <repositories>
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
         <repository>
-            <id>mcstats-repo</id>
-            <url>http://repo.mcstats.org/content/repositories/public</url>
+            <id>repo-daboross-net</id>
+            <url>http://repo.daboross.net/</url>
         </repository>
     </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.6.2-R1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.daboross.metrics.bukkit</groupId>
+            <artifactId>metrics-lite</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <finalName>${project.name}</finalName>
@@ -75,7 +76,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+                <version>3.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -92,11 +93,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <artifactSet>
-                                <includes>
-                                    <include>org.mcstats.bukkit:metrics-lite</include>
-                                </includes>
-                            </artifactSet>
                             <relocations>
                                 <relocation>
                                     <pattern>org.mcstats</pattern>
@@ -109,6 +105,7 @@
             </plugin>
         </plugins>
     </build>
+
     <issueManagement>
         <url>https://github.com/daboross/RemoveGodItems.git</url>
         <system>Github Issues</system>
