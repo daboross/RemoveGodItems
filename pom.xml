@@ -36,6 +36,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>repo-daboross-net</id>
+            <url>http://repo.daboross.net/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -100,12 +110,4 @@
         <url>https://github.com/daboross/RemoveGodItems.git</url>
         <system>Github Issues</system>
     </issueManagement>
-    <distributionManagement>
-        <repository>
-            <id>repo-daboross-net</id>
-            <name>repo.daboross.net</name>
-            <uniqueVersion>false</uniqueVersion>
-            <url>scp://repo.daboross.net/repo/</url>
-        </repository>
-    </distributionManagement>
 </project>
