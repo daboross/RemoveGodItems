@@ -3,7 +3,7 @@
 
     <groupId>net.daboross.bukkitdev</groupId>
     <artifactId>remove-god-items</artifactId>
-    <version>1.3.2</version>
+    <version>1.3.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>RemoveGodItems</name>
