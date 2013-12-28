@@ -59,6 +59,7 @@ public class GodItemChecker {
                     if (plugin.isRemove()) {
                         itemStack.setType(Material.AIR);
                         SkyLog.log(LogKey.REMOVE_OVERENCHANT, itemStack.getType(), e.getName(), entry.getValue(), name);
+                        return;
                     } else {
                         if (e.canEnchantItem(itemStack)) {
                             SkyLog.log(LogKey.FIX_OVERENCHANT_LEVEL, e.getName(), entry.getValue(), e.getMaxLevel(), itemStack.getType(), name);
