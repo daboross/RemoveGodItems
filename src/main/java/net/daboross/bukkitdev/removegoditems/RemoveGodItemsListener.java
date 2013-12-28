@@ -16,7 +16,6 @@
  */
 package net.daboross.bukkitdev.removegoditems;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,10 +25,6 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-/**
- *
- * @author daboross (based off of MasterGabeMod's work)
- */
 public class RemoveGodItemsListener implements Listener {
 
     private final RemoveGodItemsPlugin plugin;

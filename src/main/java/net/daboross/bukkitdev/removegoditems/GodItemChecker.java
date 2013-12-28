@@ -19,18 +19,12 @@ package net.daboross.bukkitdev.removegoditems;
 import java.util.Map;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-/**
- *
- * @author daboross
- */
 public class GodItemChecker {
 
     private final RemoveGodItemsPlugin plugin;
@@ -40,22 +34,20 @@ public class GodItemChecker {
     }
 
     public void removeGodEnchants(HumanEntity player) {
-        Inventory inv = player.getInventory();
-        Location loc = player.getLocation();
         String name = player.getName();
         for (ItemStack it : player.getInventory().getArmorContents()) {
-            removeGodEnchants(it, inv, loc, name);
+            removeGodEnchants(it, name);
         }
         for (ItemStack it : player.getInventory().getContents()) {
-            removeGodEnchants(it, inv, loc, name);
+            removeGodEnchants(it, name);
         }
     }
 
     public void removeGodEnchants(ItemStack itemStack, HumanEntity p) {
-        removeGodEnchants(itemStack, p.getInventory(), p.getLocation(), p.getName());
+        removeGodEnchants(itemStack, p.getName());
     }
 
-    public void removeGodEnchants(ItemStack itemStack, Inventory inventory, Location location, String name) {
+    public void removeGodEnchants(ItemStack itemStack, String name) {
         if (itemStack != null && itemStack.getType() != Material.AIR) {
             for (Map.Entry<Enchantment, Integer> entry : itemStack.getEnchantments().entrySet()) {
                 Enchantment e = entry.getKey();
@@ -64,11 +56,11 @@ public class GodItemChecker {
                     plugin.getLogger().log(Level.INFO, String.format("Removed item %s with %s level %s from %s", itemStack.getType(), e.getName(), entry.getValue(), name));
                 }
             }
-            checkOverstack(itemStack, inventory, location, name);
+            checkOverstack(itemStack, name);
         }
     }
 
-    public void checkOverstack(ItemStack itemStack, Inventory inventory, Location location, String name) {
+    public void checkOverstack(ItemStack itemStack, String name) {
         int maxAmount = itemStack.getType().getMaxStackSize();
         int amount = itemStack.getAmount();
         if (amount > maxAmount) {
@@ -82,7 +74,7 @@ public class GodItemChecker {
     }
 
     public void removeGodEnchantsNextTick(HumanEntity p, Iterable<Integer> slots) {
-        Bukkit.getScheduler().runTask(plugin, new VarriedCheckRunnable(p, slots));
+        Bukkit.getScheduler().runTask(plugin, new VariedCheckRunnable(p, slots));
     }
 
     public class GodItemFixRunnable implements Runnable {
@@ -99,23 +91,21 @@ public class GodItemChecker {
         }
     }
 
-    public class VarriedCheckRunnable implements Runnable {
+    public class VariedCheckRunnable implements Runnable {
 
         private final HumanEntity p;
         private final Iterable<Integer> items;
 
-        public VarriedCheckRunnable(HumanEntity p, Iterable<Integer> items) {
+        public VariedCheckRunnable(HumanEntity p, Iterable<Integer> items) {
             this.p = p;
             this.items = items;
         }
 
         @Override
         public void run() {
-            Inventory inv = p.getInventory();
-            Location loc = p.getLocation();
             String name = p.getName();
             for (Integer i : items) {
-                removeGodEnchants(inv.getItem(i), inv, loc, name);
+                removeGodEnchants(p.getInventory().getItem(i), name);
             }
         }
     }
