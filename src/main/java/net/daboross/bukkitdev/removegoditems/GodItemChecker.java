@@ -17,14 +17,15 @@
 package net.daboross.bukkitdev.removegoditems;
 
 import java.util.Map;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class GodItemChecker {
 
@@ -36,37 +37,66 @@ public class GodItemChecker {
 
     public void removeGodEnchants(HumanEntity player) {
         String name = player.getName();
-        for (ItemStack it : player.getInventory().getArmorContents()) {
-            removeGodEnchants(it, name);
+        PlayerInventory inv = player.getInventory();
+        Location loc = player.getLocation();
+        for (ItemStack it : inv.getArmorContents()) {
+            removeGodEnchants(it, inv, loc, name);
         }
-        for (ItemStack it : player.getInventory().getContents()) {
-            removeGodEnchants(it, name);
+        for (ItemStack it : inv.getContents()) {
+            removeGodEnchants(it, inv, loc, name);
         }
     }
 
     public void removeGodEnchants(ItemStack itemStack, HumanEntity p) {
-        removeGodEnchants(itemStack, p.getName());
+        removeGodEnchants(itemStack, p.getInventory(), p.getLocation(), p.getName());
     }
 
-    public void removeGodEnchants(ItemStack itemStack, String name) {
+    public void removeGodEnchants(ItemStack itemStack, Inventory inv, Location loc, String name) {
         if (itemStack != null && itemStack.getType() != Material.AIR) {
             for (Map.Entry<Enchantment, Integer> entry : itemStack.getEnchantments().entrySet()) {
                 Enchantment e = entry.getKey();
                 if (entry.getValue() > e.getMaxLevel() || !e.canEnchantItem(itemStack)) {
-                    itemStack.setType(Material.AIR);
-                    plugin.getLogger().log(Level.INFO, String.format("Removed item %s with %s level %s from %s", itemStack.getType(), e.getName(), entry.getValue(), name));
+                    if (plugin.isRemove()) {
+                        itemStack.setType(Material.AIR);
+                        SkyLog.log(LogKey.REMOVE_OVERENCHANT, itemStack.getType(), e.getName(), entry.getValue(), name);
+                    } else {
+                        if (e.canEnchantItem(itemStack)) {
+                            SkyLog.log(LogKey.FIX_OVERENCHANT_LEVEL, e.getName(), entry.getValue(), e.getMaxLevel(), itemStack.getType(), name);
+                            itemStack.addEnchantment(e, e.getMaxLevel());
+                        } else {
+                            SkyLog.log(LogKey.FIX_OVERENCHANT_REMOVE, e.getName(), entry.getValue(), itemStack.getType(), name);
+                            itemStack.removeEnchantment(e);
+                        }
+                    }
                 }
             }
-            checkOverstack(itemStack, name);
+            checkOverstack(itemStack, inv, loc, name);
         }
     }
 
-    public void checkOverstack(ItemStack itemStack, String name) {
+    public void checkOverstack(ItemStack itemStack, Inventory inv, Location loc, String name) {
         int maxAmount = itemStack.getType().getMaxStackSize();
         int amount = itemStack.getAmount();
         if (amount > maxAmount) {
-            plugin.getLogger().log(Level.INFO, "Removed overstacked item {0} of size {1} from {2}", new Object[]{itemStack.getType().name(), amount, name});
-            itemStack.setType(Material.AIR);
+            if (plugin.isRemove()) {
+                SkyLog.log(LogKey.REMOVE_OVERSTACK, itemStack.getType().name(), amount, name);
+                itemStack.setType(Material.AIR);
+            } else {
+                int numStacks = amount / maxAmount;
+                int left = amount % maxAmount;
+                SkyLog.log(LogKey.FIX_OVERSTACK_UNSTACK, itemStack.getType(), amount, left, numStacks, name);
+                itemStack.setAmount(left);
+                for (int i = 0; i < numStacks; i++) {
+                    ItemStack newStack = itemStack.clone();
+                    newStack.setAmount(maxAmount);
+                    int slot = inv.firstEmpty();
+                    if (slot < 0) {
+                        loc.getWorld().dropItemNaturally(loc, newStack);
+                    } else {
+                        inv.setItem(slot, newStack);
+                    }
+                }
+            }
         }
     }
 
@@ -109,7 +139,7 @@ public class GodItemChecker {
             int size = inv.getSize();
             for (Integer i : items) {
                 if (i > 0 && i < size) {
-                    removeGodEnchants(inv.getItem(i), name);
+                    removeGodEnchants(inv.getItem(i), inv, p.getLocation(), name);
                 }
             }
         }
