@@ -23,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class GodItemChecker {
@@ -104,8 +105,12 @@ public class GodItemChecker {
         @Override
         public void run() {
             String name = p.getName();
+            Inventory inv = p.getInventory();
+            int size = inv.getSize();
             for (Integer i : items) {
-                removeGodEnchants(p.getInventory().getItem(i), name);
+                if (i > 0 && i < size) {
+                    removeGodEnchants(inv.getItem(i), name);
+                }
             }
         }
     }

@@ -18,6 +18,9 @@ package net.daboross.bukkitdev.removegoditems;
 
 import java.io.IOException;
 import java.util.logging.Level;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
@@ -25,9 +28,12 @@ import org.mcstats.MetricsLite;
 public class RemoveGodItemsPlugin extends JavaPlugin {
 
     private GodItemChecker checker;
+    private boolean remove;
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        remove = getConfig().getBoolean("remove-items");
         checker = new GodItemChecker(this);
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new RemoveGodItemsListener(this), this);
@@ -46,7 +52,19 @@ public class RemoveGodItemsPlugin extends JavaPlugin {
     public void onDisable() {
     }
 
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        reloadConfig();
+        remove = getConfig().getBoolean("remove-items");
+        sender.sendMessage(ChatColor.DARK_GRAY + "Configuration reloaded.");
+        return true;
+    }
+
     public GodItemChecker getChecker() {
         return checker;
+    }
+
+    public boolean isRemove() {
+        return remove;
     }
 }
