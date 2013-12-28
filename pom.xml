@@ -3,11 +3,11 @@
 
     <groupId>net.daboross.bukkitdev</groupId>
     <artifactId>remove-god-items</artifactId>
-    <version>1.3.1-REMOVE-SNAPSHOT</version>
+    <version>1.3.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>RemoveGodItems</name>
-    <description>Removes god items from the game</description>
+    <description>Removes unattainable enchantments and items from the game</description>
     <url>https://github.com/daboross/RemoveGodItems</url>
     <inceptionYear>2013</inceptionYear>
     <licenses>
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.6.2-R1.0</version>
+            <version>1.6.4-R2.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
