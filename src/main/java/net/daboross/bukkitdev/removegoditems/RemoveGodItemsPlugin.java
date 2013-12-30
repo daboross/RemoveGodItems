@@ -32,6 +32,7 @@ public class RemoveGodItemsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        SkyLog.setLogger(getLogger());
         saveDefaultConfig();
         remove = getConfig().getBoolean("remove-items");
         checker = new GodItemChecker(this);
@@ -50,6 +51,7 @@ public class RemoveGodItemsPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        SkyLog.setLogger(null);
     }
 
     @Override
