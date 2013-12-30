@@ -24,3 +24,15 @@ Commands
 * /rgireload
  * Permission is `removegoditems.reload`
  * Reloads the configuration.
+
+Useful Links
+============
+* [Github source](https://github.com/daboross/RemoveGodItems)
+* [Github Wiki](https://github.com/daboross/RemoveGodItems/wiki)
+
+Development Builds
+==================
+
+* [Development builds](http://ci.nlmc.pw/viewType.html?guest=1&buildTypeId=BukkitPlugins_RemoveGodItems_MainBuild)
+* [Download latest semi-stable development build](http://ci.nlmc.pw/guestAuth/repository/download/BukkitPlugins_RemoveGodItems_MainBuild/.lastPinned/RemoveGodItems.jar)
+* [Download latest possibly-unstable development build](http://ci.nlmc.pw/guestAuth/repository/download/BukkitPlugins_RemoveGodItems_MainBuild/.lastSuccessful/RemoveGodItems.jar)
