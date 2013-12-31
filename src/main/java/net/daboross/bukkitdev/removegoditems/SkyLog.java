@@ -22,13 +22,18 @@ import org.bukkit.Bukkit;
 
 public class SkyLog {
 
-    private static Logger logger = Bukkit.getLogger();
+    private static final Logger defaultLogger = Bukkit.getLogger();
+    private static Logger logger = defaultLogger;
 
     static void setLogger(Logger logger) {
-        SkyLog.logger = logger == null ? Bukkit.getLogger() : logger;
+        SkyLog.logger = logger == null ? defaultLogger : logger;
     }
 
     public static void log(LogKey key, Object... args) {
-        logger.log(Level.INFO, String.format(key.message, args));
+        if (logger == defaultLogger) {
+            logger.log(Level.INFO, String.format("[RemoveGodItems] " + key.message, args));
+        } else {
+            logger.log(Level.INFO, String.format(key.message, args));
+        }
     }
 }
