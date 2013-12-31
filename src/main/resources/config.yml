@@ -1,2 +1,8 @@
 # Should god items be removed instead of 'fixed'?
 remove-items: false
+listeners:
+- creative-inventory
+- inventory-move
+- item-pickup
+- join
+- world-change

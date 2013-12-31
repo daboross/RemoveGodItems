@@ -17,27 +17,31 @@
 package net.daboross.bukkitdev.removegoditems;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
+import net.daboross.bukkitdev.removegoditems.listeners.CreativeInventoryListener;
+import net.daboross.bukkitdev.removegoditems.listeners.InventoryMoveListener;
+import net.daboross.bukkitdev.removegoditems.listeners.ItemPickupListener;
+import net.daboross.bukkitdev.removegoditems.listeners.JoinListener;
+import net.daboross.bukkitdev.removegoditems.listeners.WorldChangeListener;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
 
 public class RemoveGodItemsPlugin extends JavaPlugin {
 
     private GodItemChecker checker;
+    private GICListener[] listeners;
     private boolean remove;
 
     @Override
     public void onEnable() {
         SkyLog.setLogger(getLogger());
         saveDefaultConfig();
-        remove = getConfig().getBoolean("remove-items");
+        loadConfiguration();
         checker = new GodItemChecker(this);
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new RemoveGodItemsListener(this), this);
         MetricsLite metrics = null;
         try {
             metrics = new MetricsLite(this);
@@ -57,9 +61,42 @@ public class RemoveGodItemsPlugin extends JavaPlugin {
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         reloadConfig();
-        remove = getConfig().getBoolean("remove-items");
+        unloadListeners();
+        loadConfiguration();
         sender.sendMessage(ChatColor.DARK_GRAY + "Configuration reloaded.");
         return true;
+    }
+
+    private void unloadListeners() {
+        for (GICListener listener : listeners) {
+            listener.unregister();
+        }
+    }
+
+    private void loadConfiguration() {
+        remove = getConfig().getBoolean("remove-items");
+        List<String> listenerNames = getConfig().getStringList("listeners");
+        listeners = new GICListener[listenerNames.size()];
+        for (int i = 0; i < listenerNames.size(); i++) {
+            String listenerName = listenerNames.get(i).toLowerCase();
+            GICListener listener;
+            if (listenerName.equals("creative-inventory")) {
+                listener = new CreativeInventoryListener(this);
+            } else if (listenerName.equals("inventory-move")) {
+                listener = new InventoryMoveListener(this);
+            } else if (listenerName.equals("item-pickup")) {
+                listener = new ItemPickupListener(this);
+            } else if (listenerName.equals("join")) {
+                listener = new JoinListener(this);
+            } else if (listenerName.equals("world-change")) {
+                listener = new WorldChangeListener(this);
+            } else {
+                getLogger().log(Level.WARNING, "Unknown listener ''{0}''.", listenerName);
+                continue;
+            }
+            listeners[i] = listener;
+            listener.register();
+        }
     }
 
     public GodItemChecker getChecker() {
