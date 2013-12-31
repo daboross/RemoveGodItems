@@ -17,7 +17,6 @@
 package net.daboross.bukkitdev.removegoditems;
 
 import java.util.Map;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -102,11 +101,15 @@ public class GodItemChecker {
     }
 
     public void runFullCheckNextSecond(Player p) {
-        Bukkit.getScheduler().runTaskLater(plugin, new GodItemFixRunnable(p), 20);
+        plugin.getServer().getScheduler().runTaskLater(plugin, new GodItemFixRunnable(p), 20);
     }
 
     public void removeGodEnchantsNextTick(HumanEntity p, Iterable<Integer> slots) {
-        Bukkit.getScheduler().runTask(plugin, new VariedCheckRunnable(p, slots));
+        plugin.getServer().getScheduler().runTask(plugin, new VariedCheckRunnable(p, slots));
+    }
+
+    public void runCheckNextTick(HumanEntity p, Inventory i) {
+        plugin.getServer().getScheduler().runTask(plugin, new InventoryCheckRunnable(p.getName(), i, p.getLocation()));
     }
 
     public class GodItemFixRunnable implements Runnable {
@@ -142,6 +145,26 @@ public class GodItemChecker {
                 if (i > 0 && i < size) {
                     removeGodEnchants(inv.getItem(i), inv, p.getLocation(), name);
                 }
+            }
+        }
+    }
+
+    public class InventoryCheckRunnable implements Runnable {
+
+        private final String name;
+        private final Inventory inv;
+        private final Location location;
+
+        public InventoryCheckRunnable(final String name, final Inventory inv, final Location location) {
+            this.name = name;
+            this.inv = inv;
+            this.location = location;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i < inv.getSize(); i++) {
+                removeGodEnchants(inv.getItem(i), inv, location, name);
             }
         }
     }
