@@ -1,15 +1,23 @@
 # Should god items be removed instead of 'fixed'?
 remove-items: false
 # Possible listeners:
-# - creative-inventory
-# - inventory-move
-# - item-pickup
-# - join
-# - world-change
-# - chest-open
+# - creative-inventory # Checks items when a player takes them out of a creative inventory
+# - inventory-move # Checks items when a player moves items in their inventory
+# - item-pickup # Checks items when a player picks them up
+# - join # Checks items when a player joins
+# - world-change # Checks items 1 second after a player switches worlds
+# - chest-open # Checks items when a player opens a chest
 listeners:
 - creative-inventory
 - inventory-move
 - item-pickup
 - join
 - world-change
+# Possible checks:
+# - oversized # Removes / unstacks oversized stacks
+# - enchantments # Removes / downgrades over-powerful enchantments
+# - allattributes # Removes all custom attributes
+checks:
+- enchantments
+- oversized
+- allattributes

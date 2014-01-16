@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2014 Dabo Ross <http://www.daboross.net/>
+ * Copyright (C) 2014 Dabo Ross <http://www.daboross.net/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package net.daboross.bukkitdev.removegoditems;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import net.daboross.bukkitdev.removegoditems.listeners.ChestOpenListener;
@@ -34,7 +35,7 @@ import org.mcstats.MetricsLite;
 public class RemoveGodItemsPlugin extends JavaPlugin {
 
     private GodItemChecker checker;
-    private GICListener[] listeners;
+    private RGIListener[] listeners;
     private boolean remove;
 
     @Override
@@ -69,7 +70,7 @@ public class RemoveGodItemsPlugin extends JavaPlugin {
     }
 
     private void unloadListeners() {
-        for (GICListener listener : listeners) {
+        for (RGIListener listener : listeners) {
             listener.unregister();
         }
     }
@@ -77,10 +78,10 @@ public class RemoveGodItemsPlugin extends JavaPlugin {
     private void loadConfiguration() {
         remove = getConfig().getBoolean("remove-items");
         List<String> listenerNames = getConfig().getStringList("listeners");
-        listeners = new GICListener[listenerNames.size()];
-        for (int i = 0; i < listenerNames.size(); i++) {
-            String listenerName = listenerNames.get(i).toLowerCase();
-            GICListener listener;
+        List<RGIListener> listenersTemp = new ArrayList<RGIListener>(listenerNames.size());
+        for (String listenerName : listenerNames) {
+            listenerName = listenerName.toLowerCase();
+            RGIListener listener;
             if (listenerName.equals("creative-inventory")) {
                 listener = new CreativeInventoryListener(this);
             } else if (listenerName.equals("inventory-move")) {
@@ -97,9 +98,10 @@ public class RemoveGodItemsPlugin extends JavaPlugin {
                 getLogger().log(Level.WARNING, "Unknown listener ''{0}''.", listenerName);
                 continue;
             }
-            listeners[i] = listener;
+            listenersTemp.add(listener);
             listener.register();
         }
+        listeners = listenersTemp.toArray(new RGIListener[listenersTemp.size()]);
     }
 
     public GodItemChecker getChecker() {

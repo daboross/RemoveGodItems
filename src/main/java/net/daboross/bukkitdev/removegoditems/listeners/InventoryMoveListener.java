@@ -16,13 +16,13 @@
  */
 package net.daboross.bukkitdev.removegoditems.listeners;
 
-import net.daboross.bukkitdev.removegoditems.GICListener;
+import net.daboross.bukkitdev.removegoditems.RGIListener;
 import net.daboross.bukkitdev.removegoditems.RemoveGodItemsPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryDragEvent;
 
-public class InventoryMoveListener implements GICListener {
+public class InventoryMoveListener implements RGIListener {
 
     private final RemoveGodItemsPlugin plugin;
 
@@ -32,7 +32,7 @@ public class InventoryMoveListener implements GICListener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryMove(InventoryDragEvent evt) {
-        plugin.getChecker().removeGodEnchantsNextTick(evt.getWhoClicked(), evt.getInventorySlots());
+        plugin.getChecker().checkItemsNextTick(evt.getWhoClicked(), evt.getInventorySlots());
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2014 Dabo Ross <http://www.daboross.net/>
+ * Copyright (C) 2014 Dabo Ross <http://www.daboross.net/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,33 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.daboross.bukkitdev.removegoditems.listeners;
+package net.daboross.bukkitdev.removegoditems.checks;
 
-import net.daboross.bukkitdev.removegoditems.RGIListener;
+import net.daboross.bukkitdev.removegoditems.RGICheck;
 import net.daboross.bukkitdev.removegoditems.RemoveGodItemsPlugin;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.Location;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-public class ChestOpenListener implements RGIListener {
+public class AttributesCheck implements RGICheck {
 
     private final RemoveGodItemsPlugin plugin;
 
-    public ChestOpenListener(RemoveGodItemsPlugin plugin) {
+    public AttributesCheck(final RemoveGodItemsPlugin plugin) {
         this.plugin = plugin;
     }
 
-    @EventHandler
-    public void onChestOpen(InventoryOpenEvent evt) {
-        plugin.getChecker().checkItemsNextTick(evt.getPlayer(), evt.getInventory());
-    }
-
     @Override
-    public void unregister() {
-        InventoryOpenEvent.getHandlerList().unregister(this);
-    }
-
-    @Override
-    public void register() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public void checkItem(final ItemStack itemStack, final Inventory playerInventory, final Location playerLocation, final String playerName) {
+        // TODO: Implement attribute check
     }
 }

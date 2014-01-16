@@ -16,13 +16,13 @@
  */
 package net.daboross.bukkitdev.removegoditems.listeners;
 
-import net.daboross.bukkitdev.removegoditems.GICListener;
+import net.daboross.bukkitdev.removegoditems.RGIListener;
 import net.daboross.bukkitdev.removegoditems.RemoveGodItemsPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-public class ItemPickupListener implements GICListener {
+public class ItemPickupListener implements RGIListener {
 
     private final RemoveGodItemsPlugin plugin;
 
@@ -32,7 +32,7 @@ public class ItemPickupListener implements GICListener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPickup(PlayerPickupItemEvent evt) {
-        plugin.getChecker().removeGodEnchants(evt.getItem().getItemStack(), evt.getPlayer());
+        plugin.getChecker().checkItem(evt.getItem().getItemStack(), evt.getPlayer());
     }
 
     @Override

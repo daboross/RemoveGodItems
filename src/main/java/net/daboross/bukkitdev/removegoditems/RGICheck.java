@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2014 Dabo Ross <http://www.daboross.net/>
+ * Copyright (C) 2014 Dabo Ross <http://www.daboross.net/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@
  */
 package net.daboross.bukkitdev.removegoditems;
 
-import org.bukkit.event.Listener;
+import org.bukkit.Location;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-public interface GICListener extends Listener {
+public interface RGICheck {
 
-    public void unregister();
-
-    public void register();
+    public void checkItem(ItemStack itemStack, Inventory playerInventory, Location playerLocation, String playerName);
 }

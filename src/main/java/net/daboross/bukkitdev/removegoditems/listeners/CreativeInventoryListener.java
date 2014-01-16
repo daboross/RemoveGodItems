@@ -16,13 +16,13 @@
  */
 package net.daboross.bukkitdev.removegoditems.listeners;
 
-import net.daboross.bukkitdev.removegoditems.GICListener;
+import net.daboross.bukkitdev.removegoditems.RGIListener;
 import net.daboross.bukkitdev.removegoditems.RemoveGodItemsPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
 
-public class CreativeInventoryListener implements GICListener {
+public class CreativeInventoryListener implements RGIListener {
 
     private final RemoveGodItemsPlugin plugin;
 
@@ -32,7 +32,7 @@ public class CreativeInventoryListener implements GICListener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCreativeInventory(InventoryCreativeEvent evt) {
-        plugin.getChecker().removeGodEnchants(evt.getCursor(), evt.getWhoClicked());
+        plugin.getChecker().checkItem(evt.getCursor(), evt.getWhoClicked());
     }
 
     @Override

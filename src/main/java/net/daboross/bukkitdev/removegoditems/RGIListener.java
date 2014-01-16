@@ -16,19 +16,11 @@
  */
 package net.daboross.bukkitdev.removegoditems;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 
-public class SkyLog {
+public interface RGIListener extends Listener {
 
-    private static Logger logger = Bukkit.getLogger();
+    public void unregister();
 
-    static void setLogger(Logger logger) {
-        SkyLog.logger = logger == null ? Bukkit.getLogger() : logger;
-    }
-
-    public static void log(LogKey key, Object... args) {
-        logger.log(Level.INFO, String.format(key.message, args));
-    }
+    public void register();
 }

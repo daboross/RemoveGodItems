@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 daboross
+ * Copyright (C) 2014 Dabo Ross <http://www.daboross.net/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,13 @@
  */
 package net.daboross.bukkitdev.removegoditems;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import net.daboross.bukkitdev.removegoditems.checks.AttributesCheck;
+import net.daboross.bukkitdev.removegoditems.checks.EnchantmentCheck;
+import net.daboross.bukkitdev.removegoditems.checks.OversizedCheck;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -29,86 +32,64 @@ import org.bukkit.inventory.PlayerInventory;
 public class GodItemChecker {
 
     private final RemoveGodItemsPlugin plugin;
+    private RGICheck[] checks = new RGICheck[0];
 
     public GodItemChecker(RemoveGodItemsPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public void removeGodEnchants(HumanEntity player) {
+    public void loadChecks() {
+        List<String> checkNames = plugin.getConfig().getStringList("checks");
+        List<RGICheck> checksTemp = new ArrayList<RGICheck>(checkNames.size());
+        for (String checkName : checkNames) {
+            checkName = checkName.toLowerCase();
+            RGICheck check;
+            if (checkName.equals("enchantments")) {
+                check = new EnchantmentCheck(plugin);
+            } else if (checkName.equals("oversized")) {
+                check = new OversizedCheck(plugin);
+            } else if (checkName.equals("allattributes")) {
+                check = new AttributesCheck(plugin);
+            } else {
+                plugin.getLogger().log(Level.WARNING, "Unknown listener ''{0}''.", checkName);
+                continue;
+            }
+            checksTemp.add(check);
+        }
+        checks = checksTemp.toArray(new RGICheck[checksTemp.size()]);
+    }
+
+    public void checkItems(HumanEntity player) {
         String name = player.getName();
         PlayerInventory inv = player.getInventory();
         Location loc = player.getLocation();
         for (ItemStack it : inv.getArmorContents()) {
-            removeGodEnchants(it, inv, loc, name);
+            checkItem(it, inv, loc, name);
         }
         for (ItemStack it : inv.getContents()) {
-            removeGodEnchants(it, inv, loc, name);
+            checkItem(it, inv, loc, name);
         }
     }
 
-    public void removeGodEnchants(ItemStack itemStack, HumanEntity p) {
-        removeGodEnchants(itemStack, p.getInventory(), p.getLocation(), p.getName());
+    public void checkItem(ItemStack itemStack, HumanEntity p) {
+        checkItem(itemStack, p.getInventory(), p.getLocation(), p.getName());
     }
 
-    public void removeGodEnchants(ItemStack itemStack, Inventory inv, Location loc, String name) {
-        if (itemStack != null && itemStack.getType() != Material.AIR) {
-            for (Map.Entry<Enchantment, Integer> entry : itemStack.getEnchantments().entrySet()) {
-                Enchantment e = entry.getKey();
-                if (entry.getValue() > e.getMaxLevel() || !e.canEnchantItem(itemStack)) {
-                    if (plugin.isRemove()) {
-                        itemStack.setType(Material.AIR);
-                        SkyLog.log(LogKey.REMOVE_OVERENCHANT, itemStack.getType(), e.getName(), entry.getValue(), name);
-                        return;
-                    } else {
-                        if (e.canEnchantItem(itemStack)) {
-                            SkyLog.log(LogKey.FIX_OVERENCHANT_LEVEL, e.getName(), entry.getValue(), e.getMaxLevel(), itemStack.getType(), name);
-                            itemStack.addEnchantment(e, e.getMaxLevel());
-                        } else {
-                            SkyLog.log(LogKey.FIX_OVERENCHANT_REMOVE, e.getName(), entry.getValue(), itemStack.getType(), name);
-                            itemStack.removeEnchantment(e);
-                        }
-                    }
-                }
-            }
-            checkOverstack(itemStack, inv, loc, name);
+    public void checkItem(ItemStack itemStack, Inventory playerInventory, Location playerLocation, String playerName) {
+        for (RGICheck check : checks) {
+            check.checkItem(itemStack, playerInventory, playerLocation, playerName);
         }
     }
 
-    public void checkOverstack(ItemStack itemStack, Inventory inv, Location loc, String name) {
-        int maxAmount = itemStack.getType().getMaxStackSize();
-        int amount = itemStack.getAmount();
-        if (amount > maxAmount) {
-            if (plugin.isRemove()) {
-                SkyLog.log(LogKey.REMOVE_OVERSTACK, itemStack.getType().name(), amount, name);
-                itemStack.setType(Material.AIR);
-            } else {
-                int numStacks = amount / maxAmount;
-                int left = amount % maxAmount;
-                SkyLog.log(LogKey.FIX_OVERSTACK_UNSTACK, itemStack.getType(), amount, left, numStacks, name);
-                itemStack.setAmount(left);
-                for (int i = 0; i < numStacks; i++) {
-                    ItemStack newStack = itemStack.clone();
-                    newStack.setAmount(maxAmount);
-                    int slot = inv.firstEmpty();
-                    if (slot < 0) {
-                        loc.getWorld().dropItemNaturally(loc, newStack);
-                    } else {
-                        inv.setItem(slot, newStack);
-                    }
-                }
-            }
-        }
-    }
-
-    public void runFullCheckNextSecond(Player p) {
+    public void checkItemsNextSecond(Player p) {
         plugin.getServer().getScheduler().runTaskLater(plugin, new GodItemFixRunnable(p), 20);
     }
 
-    public void removeGodEnchantsNextTick(HumanEntity p, Iterable<Integer> slots) {
+    public void checkItemsNextTick(HumanEntity p, Iterable<Integer> slots) {
         plugin.getServer().getScheduler().runTask(plugin, new VariedCheckRunnable(p, slots));
     }
 
-    public void runCheckNextTick(HumanEntity p, Inventory i) {
+    public void checkItemsNextTick(HumanEntity p, Inventory i) {
         plugin.getServer().getScheduler().runTask(plugin, new InventoryCheckRunnable(p.getName(), i, p.getLocation()));
     }
 
@@ -122,7 +103,7 @@ public class GodItemChecker {
 
         @Override
         public void run() {
-            removeGodEnchants(p);
+            checkItems(p);
         }
     }
 
@@ -143,7 +124,7 @@ public class GodItemChecker {
             int size = inv.getSize();
             for (Integer i : items) {
                 if (i > 0 && i < size) {
-                    removeGodEnchants(inv.getItem(i), inv, p.getLocation(), name);
+                    checkItem(inv.getItem(i), inv, p.getLocation(), name);
                 }
             }
         }
@@ -164,7 +145,7 @@ public class GodItemChecker {
         @Override
         public void run() {
             for (int i = 0; i < inv.getSize(); i++) {
-                removeGodEnchants(inv.getItem(i), inv, location, name);
+                checkItem(inv.getItem(i), inv, location, name);
             }
         }
     }

@@ -16,13 +16,13 @@
  */
 package net.daboross.bukkitdev.removegoditems.listeners;
 
-import net.daboross.bukkitdev.removegoditems.GICListener;
+import net.daboross.bukkitdev.removegoditems.RGIListener;
 import net.daboross.bukkitdev.removegoditems.RemoveGodItemsPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
-public class WorldChangeListener implements GICListener {
+public class WorldChangeListener implements RGIListener {
 
     private final RemoveGodItemsPlugin plugin;
 
@@ -32,7 +32,7 @@ public class WorldChangeListener implements GICListener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onWorldChange(PlayerChangedWorldEvent evt) {
-        plugin.getChecker().runFullCheckNextSecond(evt.getPlayer());
+        plugin.getChecker().checkItemsNextSecond(evt.getPlayer());
     }
 
     @Override
