@@ -22,6 +22,7 @@ import net.daboross.bukkitdev.removegoditems.RemoveGodItemsPlugin;
 import net.daboross.bukkitdev.removegoditems.SkyLog;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,27 +35,27 @@ public class OversizedCheck implements RGICheck {
     }
 
     @Override
-    public void checkItem(final ItemStack itemStack, final Inventory inventory, final Location location, final String playerName) {
+    public void checkItem(final ItemStack itemStack, final Player player, final Inventory inventory, final Location location, final String playerName) {
         int maxAmount = itemStack.getType().getMaxStackSize();
         int amount = itemStack.getAmount();
         if (amount > maxAmount) {
             if (plugin.isRemove()) {
                 SkyLog.log(LogKey.REMOVE_OVERSTACK, itemStack.getType().name(), amount, playerName);
                 itemStack.setType(Material.AIR);
-            } else {
-                int numStacks = amount / maxAmount;
-                int left = amount % maxAmount;
-                SkyLog.log(LogKey.FIX_OVERSTACK_UNSTACK, itemStack.getType(), amount, left, numStacks, playerName);
-                itemStack.setAmount(left);
-                for (int i = 0; i < numStacks; i++) {
-                    ItemStack newStack = itemStack.clone();
-                    newStack.setAmount(maxAmount);
-                    int slot = inventory.firstEmpty();
-                    if (slot < 0) {
-                        location.getWorld().dropItemNaturally(location, newStack);
-                    } else {
-                        inventory.setItem(slot, newStack);
-                    }
+                return;
+            }
+            int numStacks = amount / maxAmount;
+            int left = amount % maxAmount;
+            SkyLog.log(LogKey.FIX_OVERSTACK_UNSTACK, itemStack.getType(), amount, left, numStacks, playerName);
+            itemStack.setAmount(left);
+            for (int i = 0; i < numStacks; i++) {
+                ItemStack newStack = itemStack.clone();
+                newStack.setAmount(maxAmount);
+                int slot = inventory.firstEmpty();
+                if (slot < 0) {
+                    location.getWorld().dropItemNaturally(location, newStack);
+                } else {
+                    inventory.setItem(slot, newStack);
                 }
             }
         }
