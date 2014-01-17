@@ -35,7 +35,7 @@ public class OversizedCheck implements RGICheck {
     }
 
     @Override
-    public void checkItem(final ItemStack itemStack, final Player player, final Inventory inventory, final Location location, final String playerName) {
+    public void checkItem(final ItemStack itemStack, final Inventory inventory, final Location location, final String playerName) {
         int maxAmount = itemStack.getType().getMaxStackSize();
         int amount = itemStack.getAmount();
         if (amount > maxAmount) {

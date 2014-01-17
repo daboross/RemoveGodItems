@@ -29,12 +29,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-public class GodItemChecker {
+public class MasterChecker {
 
     private final RemoveGodItemsPlugin plugin;
     private RGICheck[] checks = new RGICheck[0];
 
-    public GodItemChecker(RemoveGodItemsPlugin plugin) {
+    public MasterChecker(RemoveGodItemsPlugin plugin) {
         this.plugin = plugin;
     }
 

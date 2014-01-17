@@ -34,7 +34,7 @@ import org.mcstats.MetricsLite;
 
 public class RemoveGodItemsPlugin extends JavaPlugin {
 
-    private GodItemChecker checker;
+    private MasterChecker checker;
     private RGIListener[] listeners;
     private boolean remove;
 
@@ -43,7 +43,7 @@ public class RemoveGodItemsPlugin extends JavaPlugin {
         SkyLog.setLogger(getLogger());
         saveDefaultConfig();
         loadConfiguration();
-        checker = new GodItemChecker(this);
+        checker = new MasterChecker(this);
         MetricsLite metrics = null;
         try {
             metrics = new MetricsLite(this);
@@ -104,7 +104,7 @@ public class RemoveGodItemsPlugin extends JavaPlugin {
         listeners = listenersTemp.toArray(new RGIListener[listenersTemp.size()]);
     }
 
-    public GodItemChecker getChecker() {
+    public MasterChecker getChecker() {
         return checker;
     }
 

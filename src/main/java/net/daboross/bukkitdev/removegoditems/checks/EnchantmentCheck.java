@@ -37,7 +37,7 @@ public class EnchantmentCheck implements RGICheck {
     }
 
     @Override
-    public void checkItem(final ItemStack itemStack, final Player player, final Inventory inventory, final Location location, final String playerName) {
+    public void checkItem(final ItemStack itemStack, final Inventory inventory, final Location location, final String playerName) {
         if (itemStack != null && itemStack.getType() != Material.AIR) {
             for (Map.Entry<Enchantment, Integer> entry : itemStack.getEnchantments().entrySet()) {
                 Enchantment e = entry.getKey();

@@ -17,11 +17,10 @@
 package net.daboross.bukkitdev.removegoditems;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public interface RGICheck {
 
-    public void checkItem(ItemStack itemStack, Player player, Inventory playerInventory, Location playerLocation, String playerName);
+    public void checkItem(ItemStack itemStack, Inventory playerInventory, Location playerLocation, String playerName);
 }

@@ -23,7 +23,6 @@ import net.daboross.bukkitdev.removegoditems.RemoveGodItemsPlugin;
 import net.daboross.bukkitdev.removegoditems.SkyLog;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,7 +35,7 @@ public class AttributesCheck implements RGICheck {
     }
 
     @Override
-    public void checkItem(final ItemStack itemStack, final Player player, final Inventory playerInventory, final Location playerLocation, final String playerName) {
+    public void checkItem(final ItemStack itemStack, final Inventory playerInventory, final Location playerLocation, final String playerName) {
         Attributes attributes = new Attributes(itemStack);
         for (Attributes.Attribute attribute : attributes.values()) {
             if (attribute.getAmount() > 10) {
