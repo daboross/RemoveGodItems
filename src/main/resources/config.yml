@@ -21,3 +21,4 @@ checks:
 - enchantments
 - oversized
 - allattributes
+- namelength

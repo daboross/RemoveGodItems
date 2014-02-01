@@ -50,6 +50,8 @@ public class MasterChecker {
                 check = new OversizedCheck(plugin);
             } else if (checkName.equals("allattributes")) {
                 check = new AttributesCheck(plugin);
+            } else if (checkName.equals("namelength")) {
+                check = new OversizedCheck(plugin);
             } else {
                 plugin.getLogger().log(Level.WARNING, "Unknown listener ''{0}''.", checkName);
                 continue;
