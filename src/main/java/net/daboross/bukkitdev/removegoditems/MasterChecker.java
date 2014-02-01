@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.logging.Level;
 import net.daboross.bukkitdev.removegoditems.checks.AttributesCheck;
 import net.daboross.bukkitdev.removegoditems.checks.EnchantmentCheck;
+import net.daboross.bukkitdev.removegoditems.checks.NameLengthCheck;
 import net.daboross.bukkitdev.removegoditems.checks.OversizedCheck;
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
@@ -51,7 +52,7 @@ public class MasterChecker {
             } else if (checkName.equals("allattributes")) {
                 check = new AttributesCheck(plugin);
             } else if (checkName.equals("namelength")) {
-                check = new OversizedCheck(plugin);
+                check = new NameLengthCheck(plugin);
             } else {
                 plugin.getLogger().log(Level.WARNING, "Unknown listener ''{0}''.", checkName);
                 continue;
