@@ -22,3 +22,5 @@ checks:
 - oversized
 - allattributes
 - namelength
+# Blanket on all new creative items - will remove all metadata on creative items.
+blanket-creative: false
