@@ -33,6 +33,5 @@ Useful Links
 Development Builds
 ==================
 
-* [Development builds](http://ci.nlmc.pw/viewType.html?guest=1&buildTypeId=BukkitPlugins_RemoveGodItems_MainBuild)
-* [Download latest semi-stable development build](http://ci.nlmc.pw/guestAuth/repository/download/BukkitPlugins_RemoveGodItems_MainBuild/.lastPinned/RemoveGodItems.jar)
-* [Download latest possibly-unstable development build](http://ci.nlmc.pw/guestAuth/repository/download/BukkitPlugins_RemoveGodItems_MainBuild/.lastSuccessful/RemoveGodItems.jar)
+* [Development builds](http://ci.dabo.guru/p/BukkitPlugins_RemoveGodItems)
+* [Download latest development build](http://ci.dabo.guru/d/BukkitPlugins_RemoveGodItems_MainBuild/RemoveGodItems.jar)
